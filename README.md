@@ -1,3 +1,4 @@
+
 0. Inicie o Docker
 
 1. Construa os contêineres utilizando o docker-compose:
@@ -22,3 +23,7 @@
    ```shell
    npm run start:dev
    ```
+
+# Documentação da API
+Acesse a documentação da API via Swagger Localmente em:
+[http://localhost:3000/documentation#/](http://localhost:3000/documentation#/)
