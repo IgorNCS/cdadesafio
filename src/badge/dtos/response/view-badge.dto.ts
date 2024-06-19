@@ -1,13 +1,33 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsNumber, IsString } from "class-validator";
+import { IsDate, IsNumber, IsString, IsUrl } from "class-validator";
 
 export class ViewBadgeDTO {
 
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: 'cda',
+    description: 'slug do Badge'
+  })
   @IsString()
-  name: String;
+  slug: string;
+
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: 'Cidade Alta',
+    description: 'Nome do Badge'
+  })
   @IsString()
-  slug: String;
-  @IsString()
-  image: String;
+  name: string;
+
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: 'https://cidadealtarp.com/imagens/challenge/cidade-alta.png',
+    description: 'URL do Badge'
+  })
+  @IsUrl()
+  image: string;
 
 }

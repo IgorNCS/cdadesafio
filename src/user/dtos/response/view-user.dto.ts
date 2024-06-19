@@ -5,14 +5,16 @@ import { Role } from "../enums/role.enum";
 export class ViewUserDTO {
   @ApiProperty({
     description: "ID do User",
-    example: 1
+    example: 1,
+    type:Number
   })
   @IsNumber()
   id: number;
 
   @ApiProperty({
-    description: "username do User",
-    example: "iguinho"
+    description: "nome do usuário.",
+    example: "iguinho",
+    type:String
   })
   @IsString()
   username: string;

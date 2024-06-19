@@ -25,7 +25,8 @@ export class UserService {
 
         const createUser: CreateUserDTO = {
             username: registerUser.username,
-            password: hashedPassword
+            password: hashedPassword,
+            role:registerUser.role
         }
         const createdUser = await this.userRepository.create(createUser);
         const createdUserView: ViewUserDTO = UserBuilder.createViewUser(createdUser);

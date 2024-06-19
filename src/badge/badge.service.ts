@@ -6,6 +6,7 @@ import { BadgeBuilder } from './builder/badge.build';
 import { UpdateBadgeDTO } from './dtos/request/update-badge.dto';
 import { UserService } from 'src/user/user.service';
 import { RemoveBadgeDTO } from './dtos/request/remove-badge.dto';
+import { Role } from 'src/user/dtos/enums/role.enum';
 
 @Injectable()
 export class BadgeService {
@@ -13,8 +14,8 @@ export class BadgeService {
 
     async registerBadge(registerBadge: RegisterBadgeDTO, req) {
         const user = req['user'];
-
-        if (user.role !== 'admin') {
+        console.log(user.role)
+        if (user.role !== Role.ADMIN) {
             throw new UnauthorizedException("You don't have permission");
         }
 
@@ -73,7 +74,7 @@ export class BadgeService {
             throw new UnauthorizedException('Badge does not exist');
         }
 
-        if (user.role !== 'admin') {
+        if (user.role !== Role.ADMIN) {
             throw new UnauthorizedException("You don't have permission");
         }
 
@@ -132,7 +133,7 @@ export class BadgeService {
         const user = req['user'];
         const badge = await this.badgeRepository.findBySlug(removeBadge.slug);
 
-        if (user.role !== 'admin') {
+        if (user.role !== Role.ADMIN) {
             throw new UnauthorizedException("You don't have permission");
         }
         if (!badge) {
