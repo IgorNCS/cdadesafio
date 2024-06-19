@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, isURL } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, isURL } from 'class-validator';
 
 export class RegisterBadgeDTO {
 
@@ -7,7 +7,12 @@ export class RegisterBadgeDTO {
   slug: string;
   @IsString()
   name:string;
+  @IsUrl()
+  image:string;
+  
+  
+  @IsOptional()
   @IsString()
-  imageURL:string;
+  description?: string;
 
 }

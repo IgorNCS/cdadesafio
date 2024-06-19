@@ -8,8 +8,6 @@ export class ViewBadgeDTO {
   @IsString()
   slug: String;
   @IsString()
-  imagemURL: String;
-  @IsString()
-  description: String;
+  image: String;
 
 }

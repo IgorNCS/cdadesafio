@@ -5,9 +5,12 @@ export class UpdateBadgeDTO {
 
   @IsString()
   slug?: string;
+
   @IsString()
-  name?:string;
+  name?: string;
+
   @IsString()
-  imageURL?:string;
+  image?: string;
+
 
 }
