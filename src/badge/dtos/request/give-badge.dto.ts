@@ -18,7 +18,7 @@ export class GiveBadgeDTO {
     example: 1,
     description: 'ID do usuário recebedor do Badge.'
   })
-  @IsString()
+  @IsNumber()
   userRecieveId: number;
 
 

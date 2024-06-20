@@ -35,3 +35,14 @@ Acesse a documentação da API via Swagger Localmente em:
 # Postman teste
 
 O Postman para teste segue em anexo para facilitar testar as funcionalidades do código
+
+## Melhorias
+
+Foram implementados todos os opcionais e alguns pontos mais.
+
+ - Possibilidade de "Abandonar" um Badge.
+ - Possibilidade de "doar" um Badge para outro usuário.
+ - Possibilidade de um **ADM** remover um Badge de um usuário.
+ - Possibilidade de um **ADM** adicionar um Badge a um usuário.
+ - Possibilidade de realizar alterações no usuário.
+ - **ADM** consegue realizar alterações em um Badge.

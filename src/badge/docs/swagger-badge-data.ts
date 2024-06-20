@@ -3,7 +3,7 @@ import { HttpStatus } from '@nestjs/common';
 import { ViewBadgeDTO } from '../dtos/response/view-badge.dto';
 import { RegisterBadgeDTO } from '../dtos/request/register-badge.dto';
 import { UpdateBadgeDTO } from '../dtos/request/update-badge.dto';
-import { RemoveBadgeDTO } from '../dtos/request/remove-badge.dto';
+import { RemoveOrAddBadgeDTO } from '../dtos/request/remove-or-addbadge.dto';
 
 export function GetAllBadgesSwagger() {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -29,6 +29,7 @@ export function GetBadgesSwagger() {
     ApiTags('Badge')(target, propertyKey, descriptor);
     ApiQuery({ name: 'page', required: false, type: Number, example: 1 })(target, propertyKey, descriptor);
     ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })(target, propertyKey, descriptor);
+    ApiQuery({ name: 'name', required: false, type: String, example: 'Cidade Alta' })(target, propertyKey, descriptor);
     ApiResponse({
       status: HttpStatus.OK,
       description: 'Badges paginados.',
@@ -75,7 +76,7 @@ export function RedeemBadgeSwagger() {
     ApiParam({ name: 'slug', required: true, type: String, example: 'badge-slug' })(target, propertyKey, descriptor);
     ApiResponse({
       status: HttpStatus.OK,
-      description: 'Badge resgatado com sucesso!',
+      description: 'Retorna os Badges do usuário que resgatou atualizado(com o badge que foi resgatado).\n\nBadge resgatado com sucesso!',
       type: ViewBadgeDTO
     })(target, propertyKey, descriptor)
   };
@@ -95,8 +96,8 @@ export function AbandonBadgeSwagger() {
     ApiParam({ name: 'slug', required: true, type: String, example: 'badge-slug' })(target, propertyKey, descriptor);
     ApiResponse({
       status: HttpStatus.OK,
-      description: 'Badge abandonado com sucesso!',
-      type: ViewBadgeDTO
+      description: 'Retorna os Badges do usuário atualizado(sem o badge que foi abandonado).\n\nBadge abandonado com sucesso!',
+      type: [ViewBadgeDTO]
     })(target, propertyKey, descriptor)
   };
 }
@@ -119,7 +120,7 @@ export function GiveBadgeSwagger() {
 
     ApiResponse({
       status: HttpStatus.OK,
-      description: 'Retorna os Badges do usuário que deu de presente atualizado(sem o badge que foi dado).\n\nBadge presenteado com sucesso!',
+      description: 'Retorna os Badges do usuário que presenteou atualizado(sem o badge que foi dado).\n\nBadge presenteado com sucesso!',
       type: [ViewBadgeDTO]
     })(target, propertyKey, descriptor);
   };
@@ -148,8 +149,8 @@ export function RegisterBadgeSwagger() {
 export function RemoveBadgeSwagger() {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     ApiOperation({
-      summary: 'Remover um badge.',
-      description: 'Post para remover um badge.'
+      summary: 'Remover um badge do usuário.',
+      description: 'Post para remover um badge do usuário.'
     })(target, propertyKey, descriptor);
     ApiTags('Admin')(target, propertyKey, descriptor);
     ApiHeader({
@@ -158,8 +159,27 @@ export function RemoveBadgeSwagger() {
     })(target, propertyKey, descriptor);
     ApiResponse({
       status: HttpStatus.OK,
-      description: 'Badge removido com sucesso!',
-      type: ViewBadgeDTO
+      description: 'Retorna os Badges do usuário que teve o Badge removido atualizado(sem o badge que foi removido).\n\nBadge removido com sucesso!',
+      type: [ViewBadgeDTO]
+    })(target, propertyKey, descriptor)
+  };
+}
+
+export function AddBadgeSwagger() {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    ApiOperation({
+      summary: 'Adicionar um badge para o usuário.',
+      description: 'Post para adicionar um badge ao usuário.'
+    })(target, propertyKey, descriptor);
+    ApiTags('Admin')(target, propertyKey, descriptor);
+    ApiHeader({
+      name: 'Authorization',
+      description: 'Token de autenticação do usuário'
+    })(target, propertyKey, descriptor);
+    ApiResponse({
+      status: HttpStatus.OK,
+      description: 'Retorna os Badges do usuário que teve o Badge adicionado atualizado(com o badge que foi adicionado).\n\nBadge adicionado com sucesso!',
+      type: [ViewBadgeDTO]
     })(target, propertyKey, descriptor)
   };
 }

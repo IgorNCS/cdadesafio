@@ -57,16 +57,20 @@ export class BadgeRepository {
         });
     }
 
-    async getBadges(page: number, limit: number) {
+    async getBadges(page: number, limit: number, name?: string) {
         const skip = (page - 1) * limit;
+        
         const [data, total] = await this.prisma.$transaction([
             this.prisma.badge.findMany({
                 skip,
                 take: limit,
+                where: name ? { name: { contains: name, mode: 'insensitive' } } : {},
             }),
-            this.prisma.badge.count(),
+            this.prisma.badge.count({
+                where: name ? { name: { contains: name, mode: 'insensitive' } } : {},
+            }),
         ]);
-
+    
         return { data, total };
     }
 

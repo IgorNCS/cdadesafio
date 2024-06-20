@@ -5,7 +5,7 @@ import { ViewBadgeDTO } from './dtos/response/view-badge.dto';
 import { BadgeBuilder } from './builder/badge.build';
 import { UpdateBadgeDTO } from './dtos/request/update-badge.dto';
 import { UserService } from 'src/user/user.service';
-import { RemoveBadgeDTO } from './dtos/request/remove-badge.dto';
+import { RemoveOrAddBadgeDTO } from './dtos/request/remove-or-addbadge.dto';
 import { Role } from 'src/user/dtos/enums/role.enum';
 import { GiveBadgeDTO } from './dtos/request/give-badge.dto';
 
@@ -30,8 +30,8 @@ export class BadgeService {
         return viewCreatedBadge;
     }
 
-    async getBadges(page: number, limit: number) {
-        const { data, total } = await this.badgeRepository.getBadges(page, limit);
+    async getBadges(page: number, limit: number,name:string) {
+        const { data, total } = await this.badgeRepository.getBadges(page, limit,name);
 
         return { data, total };
     }
@@ -106,7 +106,7 @@ export class BadgeService {
 
         await this.badgeRepository.addUserBadge(user.id, badge.id);
 
-        return { message: 'Badge redeemed successfully', badge: badge };
+        return await this.getByUser(user.id);
     }
 
     async abandonBadge(badgeSlug: string, req) {
@@ -127,10 +127,11 @@ export class BadgeService {
 
         await this.badgeRepository.delUserBadge(user.id, badge.id);
 
-        return { message: 'Badge abandon successfully', badge: badge };
+
+        return await this.getByUser(user.id);
     }
 
-    async removeBadge(removeBadge: RemoveBadgeDTO, req) {
+    async removeBadge(removeBadge: RemoveOrAddBadgeDTO, req) {
         const user = req['user'];
         const badge = await this.badgeRepository.findBySlug(removeBadge.slug);
 
@@ -149,6 +150,32 @@ export class BadgeService {
         }
 
         await this.badgeRepository.delUserBadge(user.id, badge.id);
+
+        return await this.getByUser(removeBadge.userId)
+
+    }
+
+    async addBadge(addBadge: RemoveOrAddBadgeDTO, req) {
+        const user = req['user'];
+        const badge = await this.badgeRepository.findBySlug(addBadge.slug);
+
+        if (user.role !== Role.ADMIN) {
+            throw new UnauthorizedException("You don't have permission");
+        }
+        if (!badge) {
+            throw new UnauthorizedException('Badge not found');
+        }
+        const userBadges = await this.getByUser(addBadge.userId);
+
+        const userBadgeSlugs = userBadges.map(badge => badge.slug) || [];
+
+        if (userBadgeSlugs.includes(addBadge.slug)) {
+            throw new UnauthorizedException('User already has this badge');
+        }
+
+        await this.badgeRepository.addUserBadge(addBadge.userId, badge.id);
+        console.log('aqui')
+        return await this.getByUser(addBadge.userId)
 
     }
 
@@ -175,13 +202,19 @@ export class BadgeService {
             throw new UnauthorizedException('User hasnt this badge');
         }
 
+        const userRecieveBadges = await this.getByUser(giveBadge.userRecieveId);
+
+        const userRecieveBadgeSlugs = userRecieveBadges.map(badge => badge.slug) || [];
+
+        if (userRecieveBadgeSlugs.includes(giveBadge.slug)) {
+            throw new UnauthorizedException('User already has this badge');
+        }
+
         await this.badgeRepository.delUserBadge(user.id, badge.id);
 
         await this.badgeRepository.addUserBadge(giveBadge.userRecieveId, badge.id)
 
-        const userRecieved = await this.getByUser(user.id);
-
-        return userRecieved;
+        return await this.getByUser(user.id);
     }
 
 
