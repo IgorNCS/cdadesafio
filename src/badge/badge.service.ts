@@ -7,6 +7,7 @@ import { UpdateBadgeDTO } from './dtos/request/update-badge.dto';
 import { UserService } from 'src/user/user.service';
 import { RemoveBadgeDTO } from './dtos/request/remove-badge.dto';
 import { Role } from 'src/user/dtos/enums/role.enum';
+import { GiveBadgeDTO } from './dtos/request/give-badge.dto';
 
 @Injectable()
 export class BadgeService {
@@ -149,6 +150,38 @@ export class BadgeService {
 
         await this.badgeRepository.delUserBadge(user.id, badge.id);
 
+    }
+
+    async giveBadge(giveBadge: GiveBadgeDTO, req) {
+        const user = req['user'];
+
+        const userRecieve = await this.userService.findById(giveBadge.userRecieveId)
+
+        if (!userRecieve) {
+            throw new UnauthorizedException('User to recieve was not found');
+        }
+
+        const badge = await this.badgeRepository.findBySlug(giveBadge.slug);
+
+        if (!badge) {
+            throw new UnauthorizedException('Badge was not found');
+        }
+
+        const userBadges = await this.getByUser(user.id);
+
+        const userBadgeSlugs = userBadges.map(badge => badge.slug) || [];
+
+        if (!userBadgeSlugs.includes(giveBadge.slug)) {
+            throw new UnauthorizedException('User hasnt this badge');
+        }
+
+        await this.badgeRepository.delUserBadge(user.id, badge.id);
+
+        await this.badgeRepository.addUserBadge(giveBadge.userRecieveId, badge.id)
+
+        const userRecieved = await this.getByUser(user.id);
+
+        return userRecieved;
     }
 
 

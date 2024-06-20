@@ -75,7 +75,10 @@ export class UserService {
     }
 
     async findByUsername(username: string) {
-        console.log(await this.userRepository.findByUsername(username))
         return await this.userRepository.findByUsername(username)
+    }
+
+    async findById(userId: number) {
+        return await this.userRepository.findById(userId)
     }
 }

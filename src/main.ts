@@ -17,7 +17,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
   .setTitle('CDA - Desafio')
-  .setDescription('CDA Desafio com dos Badges')
+  .setDescription('CDA Desafio com os Badges')
   .setVersion('1.0')
   .build();
 const document = SwaggerModule.createDocument(app, config);

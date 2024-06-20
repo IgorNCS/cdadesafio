@@ -1,4 +1,4 @@
-import { ApiOperation, ApiTags, ApiResponse, getSchemaPath, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiResponse, getSchemaPath, ApiParam, ApiQuery, ApiBody, ApiHeader } from '@nestjs/swagger';
 import { HttpStatus } from '@nestjs/common';
 import { ViewBadgeDTO } from '../dtos/response/view-badge.dto';
 import { RegisterBadgeDTO } from '../dtos/request/register-badge.dto';
@@ -68,6 +68,10 @@ export function RedeemBadgeSwagger() {
       description: 'Get para resgatar um badge por slug.'
     })(target, propertyKey, descriptor);
     ApiTags('Badge')(target, propertyKey, descriptor);
+    ApiHeader({
+      name: 'Authorization',
+      description: 'Token de autenticação do usuário'
+    })(target, propertyKey, descriptor);
     ApiParam({ name: 'slug', required: true, type: String, example: 'badge-slug' })(target, propertyKey, descriptor);
     ApiResponse({
       status: HttpStatus.OK,
@@ -84,6 +88,10 @@ export function AbandonBadgeSwagger() {
       description: 'Get para abandonar um badge por slug.'
     })(target, propertyKey, descriptor);
     ApiTags('Badge')(target, propertyKey, descriptor);
+    ApiHeader({
+      name: 'Authorization',
+      description: 'Token de autenticação do usuário'
+    })(target, propertyKey, descriptor);
     ApiParam({ name: 'slug', required: true, type: String, example: 'badge-slug' })(target, propertyKey, descriptor);
     ApiResponse({
       status: HttpStatus.OK,
@@ -93,11 +101,40 @@ export function AbandonBadgeSwagger() {
   };
 }
 
+
+export function GiveBadgeSwagger() {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    ApiOperation({
+      summary: 'Presentear um badge.',
+      description: 'Post para presentear um usuário com um badge por slug.'
+    })(target, propertyKey, descriptor);
+    ApiTags('Badge')(target, propertyKey, descriptor);
+    ApiHeader({
+      name: 'Authorization',
+      description: 'Token de autenticação do usuário'
+    })(target, propertyKey, descriptor);
+    ApiParam({
+      name: 'slug', required: true, type: String, example: 'badge-slug'
+    })(target, propertyKey, descriptor);
+
+    ApiResponse({
+      status: HttpStatus.OK,
+      description: 'Retorna os Badges do usuário que deu de presente atualizado(sem o badge que foi dado).\n\nBadge presenteado com sucesso!',
+      type: [ViewBadgeDTO]
+    })(target, propertyKey, descriptor);
+  };
+}
+
+
 export function RegisterBadgeSwagger() {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     ApiOperation({
       summary: 'Registrar Badge.',
       description: 'Post para registrar novo Badge.'
+    })(target, propertyKey, descriptor);
+    ApiHeader({
+      name: 'Authorization',
+      description: 'Token de autenticação do usuário'
     })(target, propertyKey, descriptor);
     ApiTags('Admin')(target, propertyKey, descriptor);
     ApiResponse({
@@ -115,6 +152,10 @@ export function RemoveBadgeSwagger() {
       description: 'Post para remover um badge.'
     })(target, propertyKey, descriptor);
     ApiTags('Admin')(target, propertyKey, descriptor);
+    ApiHeader({
+      name: 'Authorization',
+      description: 'Token de autenticação do usuário'
+    })(target, propertyKey, descriptor);
     ApiResponse({
       status: HttpStatus.OK,
       description: 'Badge removido com sucesso!',
@@ -130,6 +171,10 @@ export function UpdateBadgeSwagger() {
       description: 'Put para atualizar um badge existente.'
     })(target, propertyKey, descriptor);
     ApiTags('Admin')(target, propertyKey, descriptor);
+    ApiHeader({
+      name: 'Authorization',
+      description: 'Token de autenticação do usuário'
+    })(target, propertyKey, descriptor);
     ApiParam({ name: 'IdBadge', required: true, type: Number, example: 1 })(target, propertyKey, descriptor);
     ApiResponse({
       status: HttpStatus.OK,

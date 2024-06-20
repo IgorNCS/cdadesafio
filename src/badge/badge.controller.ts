@@ -5,7 +5,8 @@ import { RegisterBadgeDTO } from './dtos/request/register-badge.dto';
 import { UpdateBadgeDTO } from './dtos/request/update-badge.dto';
 import { AuthGuard } from 'src/user/guards/auth.guard';
 import { RemoveBadgeDTO } from './dtos/request/remove-badge.dto';
-import { RegisterBadgeSwagger,AbandonBadgeSwagger, GetAllBadgesSwagger, GetBadgesSwagger, GetUserBadgesSwagger, RedeemBadgeSwagger, RemoveBadgeSwagger, UpdateBadgeSwagger } from './docs/swagger-badge-data';
+import { RegisterBadgeSwagger,AbandonBadgeSwagger, GetAllBadgesSwagger, GetBadgesSwagger, GetUserBadgesSwagger, RedeemBadgeSwagger, RemoveBadgeSwagger, UpdateBadgeSwagger, GiveBadgeSwagger } from './docs/swagger-badge-data';
+import { GiveBadgeDTO } from './dtos/request/give-badge.dto';
 
 @Controller('badge')
 export class BadgeController {
@@ -78,6 +79,14 @@ export class BadgeController {
         async update(@Param('IdBadge') id: number, @Body() updateBadge: UpdateBadgeDTO, @Res() res: Response, @Req() req: Request) {
                 const updatedBadge = await this.badgeService.updateBadge(id, updateBadge, req);
                 return res.status(HttpStatus.OK).json({ data: updatedBadge, status: HttpStatus.OK });
+        }
+
+        @GiveBadgeSwagger()
+        @UseGuards(AuthGuard)
+        @Post('giveBadge')
+        async giveBadge( @Body() giveBadge: GiveBadgeDTO, @Res() res: Response, @Req() req: Request) {
+                const updatedBadge = await this.badgeService.giveBadge(giveBadge, req);
+                // return res.status(HttpStatus.OK).json({ data: updatedBadge, status: HttpStatus.OK });
         }
 
 

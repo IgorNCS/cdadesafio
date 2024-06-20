@@ -1,4 +1,4 @@
-import { ApiOperation, ApiTags, ApiResponse, getSchemaPath, ApiParam } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiResponse, getSchemaPath, ApiParam, ApiHeader } from '@nestjs/swagger';
 import { HttpStatus } from '@nestjs/common';
 import { ViewUserDTO } from '../dtos/response/view-user.dto';
 import { LoginResponse } from '../dtos/response/login-response.dto';
@@ -41,6 +41,10 @@ export function LogoutUserSwagger() {
       description: 'Post para deslogar o usuario logado.'
     })(target, propertyKey, descriptor);
     ApiTags('User')(target, propertyKey, descriptor);
+    ApiHeader({
+      name: 'Authorization',
+      description: 'Token de autenticação do usuário'
+    })(target, propertyKey, descriptor);
     ApiResponse({
       status: HttpStatus.OK,
       description: 'Usuario deslogado com sucesso!',
@@ -69,6 +73,10 @@ export function UpdateUserSwagger() {
       description: 'Put para atualizar informações de um usuário existente.'
     })(target, propertyKey, descriptor);
     ApiTags('User')(target, propertyKey, descriptor);
+    ApiHeader({
+      name: 'Authorization',
+      description: 'Token de autenticação do usuário'
+    })(target, propertyKey, descriptor);
     ApiResponse({
       status: HttpStatus.OK,
       description: 'Usuário atualizado com sucesso!',
